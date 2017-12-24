@@ -12,7 +12,7 @@ from numpy.linalg import inv
 # （5）计算W(k+1)、B(k+1)
 
 
-def least_mean_square_error(data, c=1):
+def least_mean_square_error(data, c=1, b_1=1):
     x = np.array(data, dtype=np.float64)
     x_sharp = inv(x.T.dot(x)).dot(x.T)
     row, col = x.shape
@@ -20,7 +20,8 @@ def least_mean_square_error(data, c=1):
     k = 1
     while True:
         if k == 1:
-            b_k = np.ones(row).T
+            # 设置初值B(1)
+            b_k = (np.zeros(row) + b_1).T
         else:
             b_k = b(k, b_k, c, e_k)
 
@@ -30,17 +31,18 @@ def least_mean_square_error(data, c=1):
         if (e_k == 0).all():
             print "线性可分，解为"
             print w_k
-            break
+            return w_k
         elif (e_k >= 0).all():
-            print "线性可分，继续迭代可得最优解"
+            print "第" + str(k) + "次迭代：线性可分，继续迭代可得最优解"
         elif (e_k <= 0).all():
             print e_k
             print "e_k < 0, 停止迭代，检查XW(k)"
             if (x.dot(w_k) > 0).all():
                 print "线性可分，解为" + w_k
+                return w_k
             else:
                 print "XW(k) > 0 不成立，故无解，算法结束"
-            break
+                return None
         else:
             k = k + 1
 
