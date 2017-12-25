@@ -5,7 +5,7 @@ from numpy.linalg import inv
 
 
 # 最小平方误差算法（Least Mean Square Error, LMSE）
-# （1）输入参数：矩阵x
+# （1）输入参数：规范化增广样本矩阵x
 # （2）求X的伪逆矩阵 x# = (xT x)-1 xT
 # （3）设置初值c和B(1)
 # （4）计算e(k)，并进行可分性判别
@@ -13,6 +13,7 @@ from numpy.linalg import inv
 
 
 def least_mean_square_error(data, c=1, b_1=1):
+    # x：规范化增广样本"矩阵"------------------------
     x = np.array(data, dtype=np.float64)
     x_sharp = inv(x.T.dot(x)).dot(x.T)
     row, col = x.shape
@@ -38,7 +39,7 @@ def least_mean_square_error(data, c=1, b_1=1):
             print e_k
             print "e_k < 0, 停止迭代，检查XW(k)"
             if (x.dot(w_k) > 0).all():
-                print "线性可分，解为" + w_k
+                print "线性可分，解为" + str(w_k)
                 return w_k
             else:
                 print "XW(k) > 0 不成立，故无解，算法结束"

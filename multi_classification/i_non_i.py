@@ -8,6 +8,7 @@ from LMSE import least_mean_square_error
 def train(data_k):
     d_k = []
     for data_i in data_k:
+        # data_i：第i个模式类的增广样本的"序列"
         d_i = least_mean_square_error(data_i)
         if d_i is not None:
             d_k.append(d_i)
