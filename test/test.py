@@ -2,6 +2,7 @@
 from LMSE import *
 from multi_classification import i_non_i
 from multi_classification import i_j
+from dataset import gen
 
 
 def test_lmse():
@@ -46,23 +47,34 @@ def test_i_j():
     i_j.recognize(x, d_k_k)
 
 
-test_i_j()
+# test_i_j()
+
+
+def test_gen_data():
+    gen.show_data_set()
+
+
+# test_gen_data()
 
 
 def test_python():
-    a = [1, 2, 3, 4]
-    b = [x * (-1) for x in a]
+    # a = [1, 2, 3, 4]
+    # b = [x * (-1) for x in a]
+    # print a
+    # print b
+    #
+    # print "--------"
+    # w_i = [[2, 1, 1], [2, 0, 1]]
+    # w_j = [[0, 1, 1]]
+    # tag = 0
+    # for w in w_i:
+    #     for y in w_i:
+    #         if w == y:
+    #             print "tag = " + str(tag)
+    #         tag = tag + 1
+
+    a = []
+    a[0] = 2
     print a
-    print b
 
-    print "--------"
-    w_i = [[2, 1, 1], [2, 0, 1]]
-    w_j = [[0, 1, 1]]
-    tag = 0
-    for w in w_i:
-        for y in w_i:
-            if w == y:
-                print "tag = " + str(tag)
-            tag = tag + 1
-
-# test_python()
+test_python()

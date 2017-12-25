@@ -34,7 +34,8 @@ def least_mean_square_error(data, c=1, b_1=1):
             print w_k
             return w_k
         elif (e_k >= 0).all():
-            print "第" + str(k) + "次迭代：线性可分，继续迭代可得最优解"
+            pass
+            # print "第" + str(k) + "次迭代：线性可分，继续迭代可得最优解"
         elif (e_k <= 0).all():
             print e_k
             print "e_k < 0, 停止迭代，检查XW(k)"

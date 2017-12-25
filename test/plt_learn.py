@@ -9,14 +9,21 @@ ax1 = fig.add_subplot(2, 2, 1)
 ax1.set_title('test111')
 ax2 = fig.add_subplot(2, 2, 2)
 ax3 = fig.add_subplot(2, 2, 3)
-# ax4 = fig.add_subplot(2, 2, 4)
+ax4 = fig.add_subplot(2, 2, 4)
 
 # plt.plot([1.5, 3.5, -2, 1.6])
-plt.plot(randn(50).cumsum(), 'g--')
-plt.plot(randn(50).cumsum(), 'k--')
+ax3.plot(randn(50).cumsum(), 'g--')
+ax3.plot(randn(50).cumsum(), 'k--')
 ax1.hist(randn(100), bins=20, color='k', alpha=0.3)
 ax2.scatter(np.arange(30), np.arange(30) + 3 * randn(30))
 ax2.scatter(np.arange(30), np.arange(30) + 3 * randn(30))
+
+x = np.arange(10)
+y = np.arange(0, 20, 2)
+print x
+print y
+ax4.plot(x, y)
+ax4.plot(np.arange(20) + 1)
 
 plt.show()
 
