@@ -1,10 +1,11 @@
 # encoding:utf-8
 
-from multi_classification import i_non_i
-from multi_classification import i_j
-from data_set import gen
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+
+from code.data_set import gen
+from code.multi_classification import i_j
+from code.multi_classification import i_non_i
 
 
 # 从文件加载数据集 .txt ==> train(data_k)
@@ -114,8 +115,12 @@ def linear_classification_main(class_size=6):
             # 展示结果
             show_output(train_data_k, test_data_k, class_size, d_k_k=i_j_d)
         elif choice is 2:
-            pass
+            # i_non_i 分类法
+            i_non_i_file = 'output/i_non_i.txt'
+            i_non_i_d = i_non_i.i_non_i_main(train_data_k, test_data_k, i_non_i_file)
+            print "故采用i_non_i分类法，无法训练出样本数据的判别函数"
         elif choice is 3:
+            # 分段线性判别法
             pass
         elif choice is 4:
             return

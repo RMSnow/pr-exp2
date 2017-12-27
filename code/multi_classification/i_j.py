@@ -1,8 +1,9 @@
 # encoding:utf-8
 # w_i / w_j 两分法
 
-from LMSE import least_mean_square_error
 import numpy as np
+
+from code.algorithm.LMSE import least_mean_square_error
 
 
 # 训练得到能够分开任意两类i/j的判别函数d_k_k

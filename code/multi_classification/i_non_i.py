@@ -1,25 +1,31 @@
 # encoding:utf-8
 # w_i / non_w_i 两分法
 
-from LMSE import least_mean_square_error
+from code.algorithm.LMSE import least_mean_square_error
 
 
 # 训练得到每个模式类的判别函数d_k
-def train(data_k):
+def train_to_file(data_k, to_file):
     d_k = []
     index = 0
     for data_i in data_k:
-        print "--------------------data_" + str(index) + "--------------------"
+        print "--------------------d_" + str(index) + "--------------------"
         # data_i：第i个模式类的增广样本的"序列"
-        d_i = least_mean_square_error(data_i)
+        data = data_i[:]
+        for data_other in data_k:
+            if data_i != data_other:
+                for point in data_other:
+                    # 规范化增广样本
+                    data.append([x * (-1) for x in point])
+        d_i = least_mean_square_error(data,c=0.28)
         if d_i is not None:
             d_k.append(d_i)
         else:
             # 如果无法求得判别函数
             print
-            print "data_i不存在判别函数: "
-            print data_i
-            # return None
+            print "data_" + str(index) + "不存在判别函数: " + "....    " + str(len(data))
+            for data_element in data:
+                print data_element
         index = index + 1
         print
     return d_k
@@ -50,3 +56,7 @@ def recognize(x, d_k):
     print "X属于模式类" + str(tag) + ":"
     print d_k[tag]
     return d_k[tag]
+
+
+def i_non_i_main(train_data_k, test_data_k, i_j_file):
+    train_to_file(train_data_k, i_j_file)

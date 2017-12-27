@@ -1,8 +1,6 @@
 # encoding:utf-8
-from LMSE import *
-from multi_classification import i_non_i
-from multi_classification import i_j
-from data_set import gen
+from code.data_set import gen
+from code.multi_classification import i_j, i_non_i
 
 
 def test_lmse():
