@@ -2,7 +2,7 @@
 from LMSE import *
 from multi_classification import i_non_i
 from multi_classification import i_j
-from dataset import gen
+from data_set import gen
 
 
 def test_lmse():

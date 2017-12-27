@@ -16,7 +16,7 @@ def train_to_file(data_k, to_file):
         for data_j in data_k:
             d_i_j = []
             if data_i != data_j:
-                print "----------------data_" + str(i) + "_" + str(j) + "----------------"
+                print "----------------d_" + str(i) + "_" + str(j) + "----------------"
                 data_i_j = data_i[:]
                 for point in data_j:
                     # 规范化增广样本
@@ -54,17 +54,23 @@ def train_to_file(data_k, to_file):
 
 
 # 用任意两类i/j的判别函数d_k_k，对模式x进行识别(模式x为增广矩阵)
-def recognize(x, d_k_k):
+def recognize(x, d_k_k, index):
     tag = 0
     for d_i_k in d_k_k:
         d_i_mat = np.array(d_i_k)
         if (d_i_mat.dot(x) > 0).all():
-            print "X属于模式类" + str(tag)
+            output_str = ""
+            if tag == index:
+                output_str = "分类正确"
+            else:
+                output_str = "分类错误"
+
+            print str(x) + "\t属于模式类" + str(tag) + "," + output_str
             return tag
         else:
             tag = tag + 1
 
-    print "IR区"
+    print str(x) + "\t属于IR区"
     return -1
 
 
@@ -84,3 +90,11 @@ def load_d_k_k(from_file):
                 d_i_k.append(np.array([float(x) for x in d_i_j_str[2:]]))
         d_k_k.append(d_i_k)
     return d_k_k
+
+
+def i_j_main(train_data_k, test_data_k, i_j_file):
+    # i_j 分类法训练，并将判别函数导出文件
+    train_to_file(train_data_k, i_j_file)
+
+    # 从文件中加载判别函数并评测识别效果
+    return load_d_k_k(i_j_file)

@@ -1,13 +1,10 @@
 # encoding:utf-8
-# 主函数
+
 from multi_classification import i_non_i
 from multi_classification import i_j
-from dataset import gen
+from data_set import gen
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-# 整个流程：.txt ==> train(data_k) ==> LMSE(data)
 
 
 # 从文件加载数据集 .txt ==> train(data_k)
@@ -28,8 +25,8 @@ def load_data_k(data_file):
     return data_k
 
 
-# 将数据data_k展示出来
-def show_data(train_data_k, test_data_k, d_k, class_size=6):
+# 展示识别结果
+def show_output(train_data_k, test_data_k, class_size, d_k_k=None, d_k=None):
     # 获取x轴与y轴数据
     train_x_k = []
     train_y_k = []
@@ -43,7 +40,7 @@ def show_data(train_data_k, test_data_k, d_k, class_size=6):
         test_y_k.append([x[1] for x in test_data_k[i]])
 
     # 展示数据集
-    fig, axes = plt.subplots(1, 3)
+    fig, axes = plt.subplots(1, 3, sharex=True, sharey=True)
     axes[0].set_title("train_data")
     axes[1].set_title("test_data")
     axes[2].set_title("output")
@@ -64,28 +61,36 @@ def show_data(train_data_k, test_data_k, d_k, class_size=6):
     for k in range(class_size):
         axes[0].scatter(train_x_k[k], train_y_k[k], color=colors[k])
         axes[1].scatter(test_x_k[k], test_y_k[k], color=colors[k])
-        # axes[2].scatter(train_x_k[k], train_y_k[k], color=colors[k])
+        axes[2].scatter(test_x_k[k], test_y_k[k], color=colors[k], s=10)
 
-    # 绘制判别函数
-    # for d_i in d_k:
-    #     k = (-1) * (d_i[0]) / (d_i[1])
-    #     b = (-1) * d_i[2] / d_i[1]
-    #     d_i_x = np.arange(50)
-    #     d_i_y = int(k) * d_i_x
-    #     axes[2].plot(d_i_x, d_i_y)
-    #
-    #     print k
-    #     print b
-    #     print
+    # i_j分类法识别结果
+    if d_k_k is not None:
+        recognize_sum = 0
+        test_sum = 0
+        for test_k in test_data_k:
+            for point in test_k:
+                index = test_data_k.index(test_k)
+                tag = i_j.recognize(point, d_k_k, index)
+                if tag == index:
+                    recognize_sum += 1
+                test_sum += 1
+                if tag != -1:
+                    axes[2].plot(point[0], point[1], color=colors[tag], marker='x')
+                    # else:
+                    #     axes[2].plot(point[0], point[1], color='k', marker='x')
 
+        recognize_rate = float(recognize_sum) / float(test_sum)
+        print "\n识别正确率为：" + str(recognize_rate)
+
+    # plt.subplots_adjust(wspace=0)
     plt.show()
 
 
 # 线性分类算法的主函数
-def linear_classification_main():
-    # 随机生成数据集并导入文件
-    train_random_file = 'data/train_random.txt'
-    test_random_file = 'data/test_random.txt'
+def linear_classification_main(class_size=6):
+    # 随机生成数据集并导出文件
+    train_random_file = 'data/_train.txt'
+    test_random_file = 'data/_test.txt'
     gen.gen_data_to_file(train_random_file, test_random_file)
 
     # 从文件中加载数据集
@@ -94,17 +99,28 @@ def linear_classification_main():
     train_data_k = load_data_k(train_file)
     test_data_k = load_data_k(test_file)
 
-    # i_j 分类法训练，并导入文件
-    i_j_file = 'output/i_j.txt'
-    i_j.train_to_file(train_data_k, i_j_file)
-
-    # 从文件中加载判别函数并评测识别效果
-    d_k_k = i_j.load_d_k_k(i_j_file)
-    for test_k in test_data_k:
-        for point in test_k:
-            i_j.recognize(point, d_k_k)
-
-            # show_data(train_data_k, test_data_k, d_k=[])
+    while True:
+        print "----------------------"
+        print ">>> 请选择下列算法中的一项进行线性分类："
+        print "\t1. LMSE算法（采用i_j分类）"
+        print "\t2. LMSE算法（采用i_non_i分类）"
+        print "\t3. 分段线性判别法"
+        print "\t4. 退出\n"
+        choice = input("请输入1-4中的一项：")
+        if choice is 1:
+            # i_j 分类法
+            i_j_file = 'output/i_j.txt'
+            i_j_d = i_j.i_j_main(train_data_k, test_data_k, i_j_file)
+            # 展示结果
+            show_output(train_data_k, test_data_k, class_size, d_k_k=i_j_d)
+        elif choice is 2:
+            pass
+        elif choice is 3:
+            pass
+        elif choice is 4:
+            return
+        else:
+            print "输入非法，请输入标号1-4"
 
 
 linear_classification_main()
