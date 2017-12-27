@@ -12,33 +12,41 @@ from numpy.linalg import inv
 # （5）计算W(k+1)、B(k+1)
 
 
-def least_mean_square_error(data, c=1, b_1=1):
-    # x：规范化增广样本"矩阵"------------------------
+def least_mean_square_error(data, b_1=0.1, c=1, k_n=100000):
+    # x：规范化增广样本"矩阵"
     x = np.array(data, dtype=np.float64)
     x_sharp = inv(x.T.dot(x)).dot(x.T)
     row, col = x.shape
 
+    # print x
+
     k = 1
-    while True:
+    while k < k_n:
+        if k % 10000 == 0:
+            print "第" + str(k) + "次迭代..."
+
         if k == 1:
             # 设置初值B(1)
             b_k = (np.zeros(row) + b_1).T
+            # b_k = x[:, 0]
+            w_k = x_sharp.dot(b_k)
         else:
-            b_k = b(k, b_k, c, e_k)
+            b_k = b(k + 1, b_k, c, e_k)
+            w_k = w(k + 1, w_k, c, x_sharp, e_k)
 
-        w_k = w(k, x_sharp, b_k)
-        e_k = e(k, x, w_k, b_k)
+        # w_k = w(k+1, x_sharp, b_k)        # 方法二
+        e_k = e(k + 1, x, w_k, b_k)
 
         if (e_k == 0).all():
-            print "线性可分，解为"
+            print "第" + str(k) + "次迭代... " + "线性可分，解为"
             print w_k
             return w_k
         elif (e_k >= 0).all():
-            pass
-            # print "第" + str(k) + "次迭代：线性可分，继续迭代可得最优解"
+            k = k + 1
+            print "第" + str(k) + "次迭代... " + "线性可分，继续迭代可得最优解"
         elif (e_k <= 0).all():
-            print e_k
-            print "e_k < 0, 停止迭代，检查XW(k)"
+            # print e_k
+            print "第" + str(k) + "次迭代... " + "e_k < 0, 停止迭代，检查XW(k)"
             if (x.dot(w_k) > 0).all():
                 print "线性可分，解为" + str(w_k)
                 return w_k
@@ -47,6 +55,8 @@ def least_mean_square_error(data, c=1, b_1=1):
                 return None
         else:
             k = k + 1
+
+    return None
 
 
 def b(k, b_k, c, e_k):
@@ -57,5 +67,10 @@ def e(k, x, w_k, b_k):
     return x.dot(w_k) - b_k
 
 
-def w(k, x_sharp, b_k):
-    return x_sharp.dot(b_k)
+# 方法一
+def w(k, w_k, c, x_sharp, e_k):
+    return w_k + c * x_sharp.dot(np.abs(e_k))
+
+# 方法二
+# def w(k, x_sharp, b_k):
+#     return x_sharp.dot(b_k)

@@ -7,15 +7,21 @@ from LMSE import least_mean_square_error
 # 训练得到每个模式类的判别函数d_k
 def train(data_k):
     d_k = []
+    index = 0
     for data_i in data_k:
+        print "--------------------data_" + str(index) + "--------------------"
         # data_i：第i个模式类的增广样本的"序列"
         d_i = least_mean_square_error(data_i)
         if d_i is not None:
             d_k.append(d_i)
         else:
-            # 如果无法求得判别函数--------------------------------------
-            print "data_i" + str(d_i) + " 不存在判别函数"
-            return None
+            # 如果无法求得判别函数
+            print
+            print "data_i不存在判别函数: "
+            print data_i
+            # return None
+        index = index + 1
+        print
     return d_k
 
 

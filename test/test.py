@@ -73,8 +73,11 @@ def test_python():
     #             print "tag = " + str(tag)
     #         tag = tag + 1
 
-    a = []
-    a[0] = 2
-    print a
+    a = [0,1,2]
+    b = np.array(a)
+    print b
+    print b[0]
+    print b[1]
+    print b[2]
 
 test_python()
