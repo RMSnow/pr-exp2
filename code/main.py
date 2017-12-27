@@ -6,6 +6,7 @@ import numpy as np
 from code.data_set import gen
 from code.multi_classification import i_j
 from code.multi_classification import i_non_i
+from code.multi_classification import class_division
 
 
 # 从文件加载数据集 .txt ==> train(data_k)
@@ -26,8 +27,7 @@ def load_data_k(data_file):
     return data_k
 
 
-# 展示识别结果
-def show_output(train_data_k, test_data_k, class_size, d_k_k=None, d_k=None):
+def init_point_set(train_data_k, test_data_k, class_size):
     # 获取x轴与y轴数据
     train_x_k = []
     train_y_k = []
@@ -39,6 +39,13 @@ def show_output(train_data_k, test_data_k, class_size, d_k_k=None, d_k=None):
         train_y_k.append([x[1] for x in train_data_k[i]])
         test_x_k.append([x[0] for x in test_data_k[i]])
         test_y_k.append([x[1] for x in test_data_k[i]])
+
+    return train_x_k, train_y_k, test_x_k, test_y_k
+
+
+# 线性判别函数展示识别结果
+def show_linear_output(train_data_k, test_data_k, class_size, d_k_k=None, d_k=None):
+    train_x_k, train_y_k, test_x_k, test_y_k = init_point_set(train_data_k, test_data_k, class_size)
 
     # 展示数据集
     fig, axes = plt.subplots(1, 3, sharex=True, sharey=True)
@@ -87,6 +94,47 @@ def show_output(train_data_k, test_data_k, class_size, d_k_k=None, d_k=None):
     plt.show()
 
 
+# 分段线性判别函数展示识别结果
+def show_piecewise_linear_output(train_data_k, test_data_k, class_size):
+    train_x_k, train_y_k, test_x_k, test_y_k = init_point_set(train_data_k, test_data_k, class_size)
+
+    # 展示数据集
+    fig, axes = plt.subplots(1, 3, sharex=True, sharey=True)
+    axes[0].set_title("train_data")
+    axes[1].set_title("class_division")
+    axes[2].set_title("test_data")
+
+    # 绘制三个父类的准线
+    d_1 = np.arange(25)
+    d_2_x = np.arange(20, 50)
+    d_2_y = d_2_x * (-1) + 50
+    d_3_x = np.zeros(30) + 20
+    d_3_y = np.arange(20, 50)
+    for ax in axes[0:2]:
+        ax.plot(d_1)
+        ax.plot(d_2_x, d_2_y)
+        ax.plot(d_3_x, d_3_y)
+
+    # 绘制每个父类的子类分界线
+    d_1 = np.arange(25, 50)
+    d_2_x = np.arange(0, 20)
+    d_2_y = d_2_x * (-1) + 50
+    d_3_x = np.zeros(20) + 20
+    d_3_y = np.arange(0, 20)
+    axes[1].plot(d_1, d_1)
+    axes[1].plot(d_2_x, d_2_y)
+    axes[1].plot(d_3_x, d_3_y)
+
+    # 绘制散点图
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+    for k in range(class_size):
+        axes[0].scatter(train_x_k[k], train_y_k[k], color=colors[(k + 2) / 2])
+        axes[1].scatter(train_x_k[k], train_y_k[k], color=colors[(k + 2) / 2])
+        axes[2].scatter(test_x_k[k], test_y_k[k], color=colors[(k + 2) / 2])
+
+    plt.show()
+
+
 # 线性分类算法的主函数
 def linear_classification_main(class_size=6):
     # 随机生成数据集并导出文件
@@ -112,8 +160,7 @@ def linear_classification_main(class_size=6):
             # i_j 分类法
             i_j_file = 'output/i_j.txt'
             i_j_d = i_j.i_j_main(train_data_k, test_data_k, i_j_file)
-            # 展示结果
-            show_output(train_data_k, test_data_k, class_size, d_k_k=i_j_d)
+            show_linear_output(train_data_k, test_data_k, class_size, d_k_k=i_j_d)
         elif choice is 2:
             # i_non_i 分类法
             i_non_i_file = 'output/i_non_i.txt'
@@ -121,7 +168,9 @@ def linear_classification_main(class_size=6):
             print "故采用i_non_i分类法，无法训练出样本数据的判别函数"
         elif choice is 3:
             # 分段线性判别法
-            pass
+            class_division_file = 'output/class_division_txt'
+            class_division.class_division_main(train_data_k,test_data_k,class_division_file)
+            # show_piecewise_linear_output(train_data_k, test_data_k, class_size)
         elif choice is 4:
             return
         else:

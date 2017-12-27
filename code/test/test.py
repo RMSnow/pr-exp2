@@ -71,11 +71,7 @@ def test_python():
     #             print "tag = " + str(tag)
     #         tag = tag + 1
 
-    a = [0,1,2]
-    b = np.array(a)
-    print b
-    print b[0]
-    print b[1]
-    print b[2]
+    for i in range(0, 6, 2):
+        print i
 
 test_python()
