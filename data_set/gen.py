@@ -2,7 +2,6 @@
 # 生成数据集
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 # 生成数据集
