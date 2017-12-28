@@ -1,7 +1,7 @@
 # encoding:utf-8
 # w_i / non_w_i 两分法
 
-from code.algorithm.LMSE import least_mean_square_error
+from algorithm.LMSE import least_mean_square_error
 
 
 # 训练得到每个模式类的判别函数d_k

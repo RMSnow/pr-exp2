@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from code.algorithm.LMSE import least_mean_square_error
+from algorithm.LMSE import least_mean_square_error
 
 
 # 训练得到能够分开任意两类i/j的判别函数d_k_k
@@ -94,8 +94,5 @@ def load_d_k_k(from_file):
 
 
 def i_j_main(train_data_k, test_data_k, i_j_file):
-    # i_j 分类法训练，并将判别函数导出文件
     train_to_file(train_data_k, i_j_file)
-
-    # 从文件中加载判别函数并评测识别效果
     return load_d_k_k(i_j_file)

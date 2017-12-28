@@ -1,8 +1,9 @@
 # encoding:utf-8
 # 分段线性判别函数：已知子类的划分
 
-from code.algorithm.LMSE import least_mean_square_error
 import numpy as np
+
+from algorithm.LMSE import least_mean_square_error
 
 
 def train_to_file(data_k, to_file):
@@ -64,6 +65,8 @@ def recognize(x, d_k, index):
 
     if tag == index:
         output_str = "分类正确"
+    elif tag == -1:
+        output_str = "IR区"
     else:
         output_str = "分类错误"
 
@@ -82,14 +85,5 @@ def load_d_k(from_file):
 
 
 def class_division_main(train_data_k, test_data_k, class_division_file):
-    # train_to_file(train_data_k, class_division_file)
-
-    # test
-    d_k = load_d_k(class_division_file)
-    index = 0
-    for train_k in test_data_k:
-        for point in train_k:
-            recognize(point, d_k, index / 2)
-        index += 1
-
+    train_to_file(train_data_k, class_division_file)
     return load_d_k(class_division_file)
