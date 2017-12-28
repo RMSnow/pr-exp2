@@ -202,7 +202,7 @@ def linear_classification_main(class_size=6):
             print "故采用i_non_i分类法，无法训练出样本数据的判别函数"
         elif choice is 3:
             # 分段线性判别法
-            class_division_file = '_source/output/class_division_txt'
+            class_division_file = '_source/output/class_division.txt'
             class_division_d = class_division.class_division_main(train_data_k, test_data_k, class_division_file)
             show_piecewise_linear_output(train_data_k, test_data_k, class_size, d_k=class_division_d)
         elif choice is 4:
